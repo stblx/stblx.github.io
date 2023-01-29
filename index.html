@@ -1,10 +1,49 @@
-<html lang="en">
+<!DOCTYPE html>
+<html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>测试</title>
+    <title>解析剪切板 - 三条波浪线</title>
 </head>
+
 <body>
-    <p>你好</p>
-    <strong>113</strong>
+
+    <button class = "btn operate" onclick="btnOnclick()">合成网址，并开始看剧</button>
+
+    <script>
+        async function copyToClipboard(text) {
+            var dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+        }
+
+        async function readCopy() {
+            return new Promise((resolve, reject) => {
+                navigator.permissions
+                .query({ name: "clipboard-read" })
+                .then(result => {
+                    if (result.state == "granted" || result.state == "prompt") {
+                    navigator.clipboard.readText().then(
+                        text => {
+                            console.log("Clipboard text: ", text);
+                            resolve(text);
+                        },
+                        error => {
+                            console.error("Failed to read text: ", error);
+                        }
+                    );
+                    }
+                });
+            });
+        }
+
+        async function btnOnclick() {
+            var str = await readCopy();
+            copyToClipboard("okjx.cc/?url=" + str);
+        }
+
+    </script>
 </body>
 </html>
